@@ -1,0 +1,18 @@
+- job:
+    name: integration-cleanup
+    project-type: freestyle
+    defaults: global
+    description: |
+      <p><b>This job is managed automatically and will be overwritten.</b></p>
+      <p><b>Do not edit this job through the web</b></p>
+      <p>If you would like to make changes to this job, please see:
+        <a href="https://github.com/vkuspits/cinder-nfs-ci-config">
+          https://github.com/vkuspits/cinder-nfs-ci-config
+        </a>
+      </p>
+    disabled: false
+
+    builders:
+    - shell: |
+            rm -rf cinder-nfs-ci-config
+            git clone https://github.com/vkuspits/cinder-nfs-ci-config.git

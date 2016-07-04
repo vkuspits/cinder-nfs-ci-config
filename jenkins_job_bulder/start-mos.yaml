@@ -1,0 +1,47 @@
+#git clone plugin, build cinder-nfs-plugin
+- job:
+    name: cinder-nfs-plugin-build
+    project-type: freestyle
+    defaults: global
+    description: |
+      <p><b>This job is managed automatically and will be overwritten.</b></p>
+      <p><b>Do not edit this job through the web</b></p>
+      <p>If you would like to make changes to this job, please see:
+        <a href="https://github.com/vkuspits/cinder-nfs-ci-config">
+          https://github.com/vkuspits/cinder-nfs-ci-config
+        </a>
+      </p>
+    disabled: false
+
+    builders:
+    - shell: |
+            rm -rf cinder-nfs-plugin
+            git clone https://github.com/vkuspits/cinder-nfs-plugin
+            fpb --build cinder-nfs-plugin
+
+#Create MOS env via fuel-devops, scp cinder-nfs-fuel plugin
+- job:
+    name: env-config
+    project-type: freestyle
+    defaults: global
+    description: |
+      <p><b>This job is managed automatically and will be overwritten.</b></p>
+      <p><b>Do not edit this job through the web</b></p>
+      <p>If you would like to make changes to this job, please see:
+        <a href="https://github.com/vkuspits/cinder-nfs-ci-config">
+          https://github.com/vkuspits/cinder-nfs-ci-config
+        </a>
+      </p>
+    disabled: false
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: true
+            - not-built: true
+            - aborted: true
+       - trigger:
+           project: 'cinder-nfs-plugin-build'
+    builders:
+      - shell: |
+          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/site.pp
+
