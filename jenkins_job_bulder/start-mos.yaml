@@ -19,7 +19,7 @@
             git clone https://github.com/vkuspits/cinder-nfs-plugin
             fpb --build cinder-nfs-plugin
 
-#Create MOS env via fuel-devops, scp cinder-nfs-fuel plugin
+#Create MOS env via fuel-devops
 - job:
     name: env-config
     project-type: freestyle
@@ -44,4 +44,31 @@
     builders:
       - shell: |
           puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/site.pp
-
+#Copy>install>deploy cinder-nfs-plugin
+- job:
+    name: deploy-plugin
+    project-type: freestyle
+    defaults: global
+    description: |
+      <p><b>This job is managed automatically and will be overwritten.</b></p>
+      <p><b>Do not edit this job through the web</b></p>
+      <p>If you would like to make changes to this job, please see:
+        <a href="https://github.com/vkuspits/cinder-nfs-ci-config">
+          https://github.com/vkuspits/cinder-nfs-ci-config
+        </a>
+      </p>
+    disabled: false
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: true
+            - not-built: true
+            - aborted: true
+       - trigger:
+           project: 'env-config'
+    builders:
+      - shell: |
+          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
+          scp $WORKSPACE/cinder-nfs-ci-config/cinder-nfs-plugin/nfs-* root@10.10.0.2:\tmp
+          ssh root@10.10.0.2
+          /openstack-env-create/

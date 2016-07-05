@@ -17,7 +17,7 @@ class required-packages {
 		user         => 'root',
 	}
 
-	package { $virt_env_packages:
+	package { '$virt_env_packages':
 		ensure  => present,
 		require => Exec['apt-get update'], 
 	}
