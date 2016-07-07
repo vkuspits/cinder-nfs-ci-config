@@ -22,8 +22,16 @@ class required-packages {
 		require => Exec['apt-get update'], 
 	}
 
+	class { 'python' :
+  	  version    => 'system',
+  	  pip        => 'present',
+  	  dev        => 'absent',
+  	  virtualenv => 'present',
+  	  gunicorn   => 'absent',
+	}
+
 	module { 'stankevich/python':
-	    ensure => present,
+ 	    ensure => present,
 	}
 
 	python::virtualenv { 'fuel-devops-env':

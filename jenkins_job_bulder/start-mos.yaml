@@ -15,6 +15,8 @@
 
     builders:
     - shell: |
+            sudo apt-get install createrepo rpm dpkg-dev
+            sudo pip install fuel-plugin-builder
             rm -rf cinder-nfs-plugin
             git clone https://github.com/vkuspits/cinder-nfs-plugin
             fpb --build cinder-nfs-plugin
@@ -39,10 +41,11 @@
             - success: true
             - not-built: true
             - aborted: true
-       - trigger:
+      - trigger:
            project: 'cinder-nfs-plugin-build'
     builders:
       - shell: |
+          puppet module install rcoleman-puppet_module
           puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/site.pp
 #Copy>install>deploy cinder-nfs-plugin
 - job:
@@ -64,7 +67,7 @@
             - success: true
             - not-built: true
             - aborted: true
-       - trigger:
+      - trigger:
            project: 'env-config'
     builders:
       - shell: |
@@ -92,8 +95,18 @@
             - success: true
             - not-built: true
             - aborted: true
-       - trigger:
+      - trigger:
            project: 'deploy-plugin'
     builders:
       - shell: |
           echo "deploy-plugin succesfull" >> #WORKSPACE/cinder-nfs-plugin/job_result
+
+- project:
+    name: start-mos
+    mos:
+      - '9.0'
+    jobs:
+      - 'cinder-nfs-plugin-build'
+      - 'env-config'
+      - 'deploy-plugin'
+      - 'deploy-success'

@@ -1,0 +1,5 @@
+- builder:
+	name: cinder-nfs-ci-config-prep
+	builders:
+	  - shell: |
+	  		git clone https://github.com/vkuspits/cinder-nfs-ci-config
