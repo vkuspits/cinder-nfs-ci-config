@@ -3,37 +3,33 @@
 #
 class required-packages {
 	# resources
-	$required_packages = [ 'git', 'postgresql', 'postgresql-server-dev-all', 'libyaml-dev',
-	    'libffi-dev', 'python-dev', 'python-libvirt', 'python-pip', 'qemu-kvm', 'qemu-utils',
-	    'libvirt-bin', 'libvirt-dev', 'ubuntu-vm-builder', 'bridge-utils']
-	$virt_env_packages = [ 'python-virtualenv', 'libpq-dev', 'libgmp-dev']
+	$required_packages = [ 'git', 'postgresql', 'postgresql-server-dev-all',
+	  'libyaml-dev', 'libffi-dev', 'qemu-kvm', 'qemu-utils',
+	  'libvirt-bin', 'libvirt-dev', 'ubuntu-vm-builder', 'bridge-utils']
+	
 	package { $required_packages:
-		ensure => present,
+	  	ensure => present,
 	}
 
-	exec { 'apt-get update':
-		command      => '/bin/apt-get update && /bin/apt-get upgrade -y',
-		path         => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-		user         => 'root',
+	exec { 'module' :
+      	command => 'puppet module install stankevich/python',
+      	path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
 	}
 
-	package { $virt_env_packages:
-		ensure  => present,
-		require => Exec['apt-get update'], 
-	}
 
+	# Class: python
+	#
+	#
 	class { 'python' :
-  	  version    => 'system',
-  	  pip        => 'present',
-  	  dev        => 'absent',
-  	  virtualenv => 'present',
-  	  gunicorn   => 'absent',
+		version    => 'system',
+  		pip        => 'present',
+  		dev        => 'absent',
+  		virtualenv => 'present',
+  		gunicorn   => 'absent',
 	}
-
-	module { 'stankevich/python':
- 	    ensure => present,
-	}
-
+	#Change directory for fuel-devops-env, remake job in jenkins
+	#to do ssh connection to slave node, before run puppet script
+	#with requiring pkgs, and creating fuel env 
 	python::virtualenv { 'fuel-devops-env':
 	    ensure     => present,
 	    systempkgs => true,

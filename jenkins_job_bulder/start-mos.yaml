@@ -45,8 +45,9 @@
            project: 'cinder-nfs-plugin-build'
     builders:
       - shell: |
-          puppet module install rcoleman-puppet_module
-          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/site.pp
+          scp -i rsa $WORKSPACE/cinder-nfs-ci-config 172.18.66.28:/tmp 
+          ssh -i rsa root@172.18.66.28
+          puppet apply /tmp/cinder-nfs-ci-config/puppet/manifest/site.pp
 #Copy>install>deploy cinder-nfs-plugin
 - job:
     name: deploy-plugin
@@ -71,6 +72,7 @@
            project: 'env-config'
     builders:
       - shell: |
+          #переписать установку венва на слейва, а не в папку дженкинса
           puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
           scp $WORKSPACE/cinder-nfs-ci-config/cinder-nfs-plugin/nfs-* root@10.10.0.2:/tmp
           scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py root@10.10.0.2:/tmp
@@ -99,7 +101,7 @@
            project: 'deploy-plugin'
     builders:
       - shell: |
-          echo "deploy-plugin succesfull" >> #WORKSPACE/cinder-nfs-plugin/job_result
+          echo "deploy-plugin succesfull" >> $WORKSPACE/cinder-nfs-plugin/job_result
 
 - project:
     name: start-mos
