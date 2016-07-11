@@ -2,6 +2,8 @@
     name: integration-cleanup
     project-type: freestyle
     defaults: global
+    parametrs:
+      - node: Vkuspits-pc
     description: |
       <p><b>This job is managed automatically and will be overwritten.</b></p>
       <p><b>Do not edit this job through the web</b></p>
@@ -20,12 +22,15 @@
     name: jobs-updater
     node: master
     project-type: freestyle
-    description: "<b>This job is managed by Jenkins Job Builder, do not edit it through WebUI.\
-                  \n<p>Please use this repository to make changes: <a href=\"https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a></b>\
-                  \n<p><b>Title</b>: Jenkins Jobs Update job <br/>\
-                  \n<b>Description</b>: This job updates all other jobs from qa-ci repo. <br/>\
-                  \n<b>Maintainer</b>: Vladislav Kuspits<br/>"
+    description: |
+              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+              Title: Jenkins Jobs Update job 
+              Description: This job updates all other jobs from qa-ci repo. 
+              Maintainer: Vladislav Kuspits
     defaults: global
+    parametrs:
+      - node: Vkuspits-pc
     disabled: false
     concurrent: false
 

@@ -3,6 +3,8 @@
     name: cinder-nfs-plugin-build
     project-type: freestyle
     defaults: global
+    parametrs:
+      - node: Vkuspits-pc
     description: |
       <p><b>This job is managed automatically and will be overwritten.</b></p>
       <p><b>Do not edit this job through the web</b></p>
@@ -12,13 +14,22 @@
         </a>
       </p>
     disabled: false
+#Require slack notification
+    properties:
+      - slack:
+          room: @vkuspits
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
 
+    scm:
+      - git:
+          url: 'https://github.com/vkuspits/cinder-nfs-plugin.git'
+          branches:
+            - 'origin/master'
     builders:
-    - shell: |
-            sudo apt-get install createrepo rpm dpkg-dev
-            sudo pip install fuel-plugin-builder
-            rm -rf cinder-nfs-plugin
-            git clone https://github.com/vkuspits/cinder-nfs-plugin
+      - shell: |
             fpb --build cinder-nfs-plugin
 
 #Create MOS env via fuel-devops
@@ -26,6 +37,8 @@
     name: env-config
     project-type: freestyle
     defaults: global
+    parametrs:
+      - node: Vkuspits-pc
     description: |
       <p><b>This job is managed automatically and will be overwritten.</b></p>
       <p><b>Do not edit this job through the web</b></p>
@@ -43,16 +56,24 @@
             - aborted: true
       - trigger:
            project: 'cinder-nfs-plugin-build'
+
+    properties:
+      - slack:
+          room: @vkuspits
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
     builders:
       - shell: |
-          scp -i rsa $WORKSPACE/cinder-nfs-ci-config 172.18.66.28:/tmp 
-          ssh -i rsa root@172.18.66.28
-          puppet apply /tmp/cinder-nfs-ci-config/puppet/manifest/site.pp
+          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/site.pp
 #Copy>install>deploy cinder-nfs-plugin
 - job:
     name: deploy-plugin
     project-type: freestyle
     defaults: global
+    parametrs:
+      - node: Vkuspits-pc
     description: |
       <p><b>This job is managed automatically and will be overwritten.</b></p>
       <p><b>Do not edit this job through the web</b></p>
@@ -70,6 +91,14 @@
             - aborted: true
       - trigger:
            project: 'env-config'
+
+    properties:
+      - slack:
+          room: @vkuspits
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
     builders:
       - shell: |
           #переписать установку венва на слейва, а не в папку дженкинса
@@ -82,6 +111,8 @@
     name: deploy-success
     project-type: freestyle
     defaults: global
+    parametrs:
+      - node: Vkuspits-pc
     description: |
       <p><b>This job is managed automatically and will be overwritten.</b></p>
       <p><b>Do not edit this job through the web</b></p>
@@ -99,6 +130,13 @@
             - aborted: true
       - trigger:
            project: 'deploy-plugin'
+    properties:
+      - slack:
+          room: @vkuspits
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
     builders:
       - shell: |
           echo "deploy-plugin succesfull" >> $WORKSPACE/cinder-nfs-plugin/job_result
