@@ -6,11 +6,11 @@
     parametrs:
       - node: slave
     description: |
-              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
-              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from qa-ci repo. 
-              Maintainer: Vladislav Kuspits
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Cinder-nfs-plugin-build job 
+      Description: This job updates all other jobs from qa-ci repo. 
+      Maintainer: Vladislav Kuspits
     disabled: false
 #Require slack notification
     properties:
@@ -39,11 +39,11 @@
     parametrs:
       - node: slave
     description: |
-              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
-              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from qa-ci repo. 
-              Maintainer: Vladislav Kuspits
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Environment configuration job 
+      Description: This job updates all other jobs from qa-ci repo. 
+      Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
       - workspace-cleanup:
@@ -72,11 +72,11 @@
     parametrs:
       - node: slave
     description: |
-              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
-              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from qa-ci repo. 
-              Maintainer: Vladislav Kuspits
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Install and deploy plugin job 
+      Description: This job updates all other jobs from qa-ci repo. 
+      Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
       - workspace-cleanup:
@@ -108,11 +108,11 @@
     parametrs:
       - node: slave
     description: |
-              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
-              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from qa-ci repo. 
-              Maintainer: Vladislav Kuspits
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: job 
+      Description: This job updates all other jobs from qa-ci repo. 
+      Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
       - workspace-cleanup:
