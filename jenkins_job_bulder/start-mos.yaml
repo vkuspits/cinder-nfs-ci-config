@@ -15,7 +15,7 @@
 #Require slack notification
     properties:
       - slack:
-          room: @vkuspits
+          room: vkuspits
           notify-success: true
           notify-aborted: true
           notify-not-built: true
@@ -56,7 +56,7 @@
 
     properties:
       - slack:
-          room: @vkuspits
+          room: vkuspits
           notify-success: true
           notify-aborted: true
           notify-not-built: true
@@ -89,7 +89,7 @@
 
     properties:
       - slack:
-          room: @vkuspits
+          room: vkuspits
           notify-success: true
           notify-aborted: true
           notify-not-built: true
@@ -124,7 +124,7 @@
            project: 'deploy-plugin'
     properties:
       - slack:
-          room: @vkuspits
+          room: vkuspits
           notify-success: true
           notify-aborted: true
           notify-not-built: true
