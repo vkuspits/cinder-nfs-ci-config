@@ -3,7 +3,7 @@
 #
 class fuel-devops {
 	# resources
-	$iso_path = '$WORKSPACE/'
+	$iso_path = '*/MirantisOpenStack-9.0-RC2.iso'
     $create_command = '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env/bin/dos.py 
     create --vcpu 2 --node-count 4 --ram 3 --iso-path $iso_path --admin-ram 4 
     --admin-disk-size 80 cinder_nfs_ci'

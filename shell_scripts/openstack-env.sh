@@ -2,9 +2,9 @@
 fuel plugins --install /tmp/nfs-service*
 fuel env create --name cinder_nfs_ci --rel 2 --network-mode neutron --net-segment-type vlan
 #This part make plugin enabled in fuel env
-fuel --env 1 settings download
+fuel --env 1 settings --download
 . /tmp/settings.py
-fuel --env 1 settings upload
+fuel --env 1 settings --upload
 #
 #Set node roles
 fuel node set --node 1 --role controller --env 1
