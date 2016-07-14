@@ -38,4 +38,4 @@
     triggers:
       - pollscm: "* * * * * "
     builders:
-      - shell:  "jenkins-jobs update jenkins_job_builder"
+      - shell:  "jenkins-jobs --conf conf.ini update jenkins_job_builder"
