@@ -9,6 +9,8 @@ python /tmp/settings.py
 fuel --env $env_id settings --upload
 #
 #Set node roles
+#fuel nodes | grep -v '\ \ [0-9]\+' | awk '{print $1}' | grep '[0-9]\+'
+#вытаскивает все нода не прицепленные к енвам
 fuel node set --node 1 --role controller --env $env_id
 fuel node set --node 2 --role compute,cinder --env $env_id
 fuel node set --node 3 --role nfs-service --env $env_id

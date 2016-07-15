@@ -19,6 +19,8 @@
           notify-aborted: true
           notify-not-built: true
           notify-failure: true
+      - trigger:
+           project: 'env-config'
 
     scm:
       - git:
@@ -51,7 +53,7 @@
             - not-built: true
             - aborted: true
       - trigger:
-           project: 'cinder-nfs-plugin-build'
+           project: 'deploy-plugin'
       - slack:
           notify-success: true
           notify-aborted: true
@@ -81,7 +83,7 @@
             - not-built: true
             - aborted: true
       - trigger:
-           project: 'env-config'
+           project: 'deploy-success'
       - slack:
           notify-success: true
           notify-aborted: true
@@ -113,8 +115,6 @@
             - success: true
             - not-built: true
             - aborted: true
-      - trigger:
-           project: 'deploy-plugin'
       - slack:
           notify-success: true
           notify-aborted: true
