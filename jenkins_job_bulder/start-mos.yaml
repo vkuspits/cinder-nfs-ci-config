@@ -15,7 +15,9 @@
 #Require slack notification
     publishers:
       - slack:
-          room: vkuspits
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
           notify-success: true
           notify-aborted: true
           notify-not-built: true
@@ -56,7 +58,9 @@
       - trigger:
            project: 'deploy-plugin'
       - slack:
-          room: vkuspits
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
           notify-success: true
           notify-aborted: true
           notify-not-built: true
@@ -87,7 +91,9 @@
       - trigger:
            project: 'deploy-success'
       - slack:
-          room: vkuspits
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
           notify-success: true
           notify-aborted: true
           notify-not-built: true
@@ -119,7 +125,9 @@
             - not-built: true
             - aborted: true
       - slack:
-          room: vkuspits
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
           notify-success: true
           notify-aborted: true
           notify-not-built: true
