@@ -1,14 +1,16 @@
 #Create openstack enviroment for cinder-nfs-plugin
 fuel plugins --install /tmp/nfs-service*
 fuel env create --name cinder_nfs_ci --rel 2 --net-segment-type vlan
+env=$(fuel env | grep cinder_nfs_ci)
+env_id=${env:0:1}
 #This part make plugin enabled in fuel env
-fuel --env 1 settings --download
+fuel --env $env_id settings --download
 python /tmp/settings.py
-fuel --env 1 settings --upload
+fuel --env $env_id settings --upload
 #
 #Set node roles
-fuel node set --node 1 --role controller --env 1
-fuel node set --node 2 --role compute,cinder --env 1
-fuel node set --node 3 --role nfs-service --env 1
+fuel node set --node 1 --role controller --env $env_id
+fuel node set --node 2 --role compute,cinder --env $env_id
+fuel node set --node 3 --role nfs-service --env $env_id
 #provision and deploy nodes
-fuel --env 1 deploy-changes
+fuel --env $env_id deploy-changes
