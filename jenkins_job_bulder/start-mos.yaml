@@ -30,6 +30,16 @@
           url: 'https://github.com/vkuspits/cinder-nfs-plugin.git'
           branches:
             - 'origin/master'
+    triggers:
+      - gerrit:
+          trigger-on:
+            - patchset-created-event
+          projects:
+            - project-compare-type: PLAIN
+            project-pattern: "vkuspits/cinder-nfs-plugin"
+            branches:
+              - branch-compare-type: PLAIN
+              - branch-pattern: 'master'
     builders:
       - shell: |
             cd $WORKSPACE/cinder-nfs-plugin-build
