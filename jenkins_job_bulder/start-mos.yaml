@@ -36,10 +36,10 @@
             - patchset-created-event
           projects:
             - project-compare-type: PLAIN
-            project-pattern: "vkuspits/cinder-nfs-plugin"
-            branches:
-              - branch-compare-type: PLAIN
-              - branch-pattern: 'master'
+              project-pattern: "vkuspits/cinder-nfs-plugin"
+              branches:
+                - branch-compare-type: PLAIN
+                - branch-pattern: 'master'
     builders:
       - shell: |
             fpb --build $WORKSPACE
