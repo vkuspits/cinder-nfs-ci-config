@@ -4,7 +4,8 @@
     project-type: freestyle
     defaults: global
     parameters:
-      - node: slave
+      - node:
+          name: slave
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
@@ -30,16 +31,16 @@
           url: 'https://github.com/vkuspits/cinder-nfs-plugin.git'
           branches:
             - 'origin/master'
-    triggers:
-      - gerrit:
-          trigger-on:
-            - patchset-created-event
-          projects:
-            - project-compare-type: 'PLAIN'
-              project-pattern: 'vkuspits/cinder-nfs-plugin'
-              branches:
-                - branch-compare-type: 'PLAIN'
-                - branch-pattern: 'master'
+ #   triggers:
+  #    - gerrit:
+   #       trigger-on:
+    #        - patchset-created-event
+     #     projects:
+      #      - project-compare-type: 'PLAIN'
+       #       project-pattern: 'vkuspits/cinder-nfs-plugin'
+        #      branches:
+         #       - branch-compare-type: 'PLAIN'
+          #      - branch-pattern: 'master'
     builders:
       - shell: |
             fpb --build $WORKSPACE
@@ -49,8 +50,9 @@
     name: env-config
     project-type: freestyle
     defaults: global
-    parametrs:
-      - node: slave
+    parameters:
+      - node:
+          name: slave
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
@@ -85,7 +87,8 @@
     project-type: freestyle
     defaults: global
     parameters:
-      - node: slave
+      - node:
+          name: slave
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
@@ -115,7 +118,7 @@
           git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
           puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
           scp $WORKSPACE/cinder-nfs-plugin-build/cinder-nfs-plugin/nfs-* root@10.10.0.2:/tmp
-          scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py root@10.10.0.2:/tmp
+          scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py root@10.10.0.2:/root
           ssh root@10.10.0.2
           openstack-env.sh
 - job:
@@ -123,7 +126,8 @@
     project-type: freestyle
     defaults: global
     parameters:
-      - node: slave
+      - node:
+          name: slave
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>

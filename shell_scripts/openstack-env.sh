@@ -5,7 +5,7 @@ env=$(fuel env | grep cinder_nfs_ci)
 env_id=${env:0:1}
 #This part make plugin enabled in fuel env
 fuel --env $env_id settings --download
-python /tmp/settings.py
+python /root/settings.py
 fuel --env $env_id settings --upload
 #
 #Set node roles

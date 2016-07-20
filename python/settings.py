@@ -1,7 +1,7 @@
 import yaml
 import os
 import fnmatch
-for file in os.listdir('/home/vlad/working_dir/python_project/'):
+for file in os.listdir('/root/'):
     if fnmatch.fnmatch(file, 'settings*.yaml'):
         file_name = file
 path = os.path.join(os.path.abspath(os.path.dirname(__file__)), file_name)
