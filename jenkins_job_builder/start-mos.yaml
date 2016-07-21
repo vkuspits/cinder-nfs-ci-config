@@ -1,0 +1,147 @@
+#git clone plugin, build cinder-nfs-plugin
+- job:
+    name: cinder-nfs-plugin-build
+    project-type: freestyle
+    defaults: global
+    node: slave
+    description: |
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Cinder-nfs-plugin-build job 
+      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Maintainer: Vladislav Kuspits
+    disabled: false
+#Require slack notification
+    publishers:
+      - slack:
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
+      - trigger:
+           project: 'env-config'
+
+    scm:
+      - git:
+          url: 'https://github.com/vkuspits/cinder-nfs-plugin'
+          branches:
+            - 'origin/master'
+ #   triggers:
+  #    - gerrit:
+   #       trigger-on:
+    #        - patchset-created-event
+     #     projects:
+      #      - project-compare-type: 'PLAIN'
+       #       project-pattern: 'vkuspits/cinder-nfs-plugin'
+        #      branches:
+         #       - branch-compare-type: 'PLAIN'
+          #      - branch-pattern: 'master'
+    builders:
+      - shell: |
+            git branch "jobbr${BUILD_NUMBER}"
+            fpb --build $WORKSPACE
+
+#Create MOS env via fuel-devops
+- job:
+    name: env-config
+    project-type: freestyle
+    defaults: global
+    node: slave
+    description: |
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Environment configuration job 
+      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Maintainer: Vladislav Kuspits
+    disabled: false
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: true
+            - not-built: true
+            - aborted: true
+      - trigger:
+           project: 'deploy-plugin'
+      - slack:
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
+    builders:
+      - shell: |
+          rm -rf cinder-nfs-ci-config
+          git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
+          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/site.pp
+#Copy>install>deploy cinder-nfs-plugin
+- job:
+    name: deploy-plugin
+    project-type: freestyle
+    defaults: global
+    node: slave
+    description: |
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Install and deploy plugin job 
+      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Maintainer: Vladislav Kuspits
+    disabled: false
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: true
+            - not-built: true
+            - aborted: true
+      - trigger:
+           project: 'deploy-success'
+      - slack:
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
+    builders:
+      - shell: |
+          rm -rf cinder-nfs-ci-config
+          git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
+          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
+          scp $WORKSPACE/cinder-nfs-plugin-build/cinder-nfs-plugin/nfs-* root@10.10.0.2:/tmp
+          scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py root@10.10.0.2:/root
+          ssh root@10.10.0.2
+          openstack-env.sh
+- job:
+    name: deploy-success
+    project-type: freestyle
+    defaults: global
+    node: slave
+    description: |
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: job 
+      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Maintainer: Vladislav Kuspits
+    disabled: false
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: true
+            - not-built: true
+            - aborted: true
+      - slack:
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
+    builders:
+      - shell: |
+          echo "deploy-plugin succesfull" >> job_result
