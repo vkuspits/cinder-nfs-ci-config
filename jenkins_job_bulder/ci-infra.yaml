@@ -30,12 +30,19 @@
       - node: slave
     disabled: false
     concurrent: false
-    scm:
-     - git:
-        url: https://github.com/vkuspits/cinder-nfs-ci-config.git
-        branches:
-          - "origin/master"
+#    scm:
+#     - git:
+#        url: https://github.com/vkuspits/cinder-nfs-ci-config.git
+#        branches:
+#          - "origin/master"
     triggers:
       - pollscm: "* * * * * "
     builders:
-      - shell:  "jenkins-jobs --conf conf.ini update jenkins_job_builder"
+      - shell: |
+            rm -rf cinder-nfs-ci-config
+            git clone https://github.com/vkuspits/cinder-nfs-ci-config
+            echo "[job_builder]\
+            ignore_cache=True\
+            [jenkins]\
+            url=http://127.0.0.1:8080" > conf.ini
+            jenkins-jobs --conf conf.ini update $WORKSPACE/cinder-nfs-ci-config/jenkins_job_builder/
