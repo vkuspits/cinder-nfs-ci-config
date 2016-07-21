@@ -29,16 +29,17 @@
           url: 'https://github.com/vkuspits/cinder-nfs-plugin'
           branches:
             - 'origin/master'
- #   triggers:
-  #    - gerrit:
-   #       trigger-on:
-    #        - patchset-created-event
-     #     projects:
-      #      - project-compare-type: 'PLAIN'
-       #       project-pattern: 'vkuspits/cinder-nfs-plugin'
-        #      branches:
-         #       - branch-compare-type: 'PLAIN'
-          #      - branch-pattern: 'master'
+    triggers:
+      - gerrit:
+          trigger-on:
+            - patchset-created-event:
+                exclude-drafts: true
+                exclude-trivial-rebase: true
+                exclude-no-code-change: false
+          projects:
+            - project-compare-type: 'PLAIN'
+              project-pattern: 'vkuspits/cinder-nfs-plugin'
+              branch-pattern: 'master'
     builders:
       - shell: |
             git branch "jobbr${BUILD_NUMBER}"
