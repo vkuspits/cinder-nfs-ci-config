@@ -11,8 +11,6 @@ fuel --env $env_id settings --upload
 #Set node roles
 node_ids=$(fuel nodes | grep -v '\ \ [0-9]\+' | awk '{print $1}' | grep '[0-9]\+')
 #вытаскивает все ноды не прицепленные к енвам
-fuel node set --node ${node_ids:0:1} --role controller --env $env_id
-fuel node set --node ${node_ids:2:1} --role compute,cinder --env $env_id
-fuel node set --node ${node_ids:4:1} --role nfs-service --env $env_id
+fuel node set --node ${node_ids:0:1} --role nfs-service --env $env_id
 #provision and deploy nodes
 fuel --env $env_id deploy-changes
