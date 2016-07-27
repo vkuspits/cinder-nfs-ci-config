@@ -2,13 +2,11 @@
     name: integration-cleanup
     project-type: freestyle
     defaults: global
-    parametrs:
-      - node: slave
     description: |
               This job is managed by Jenkins Job Builder, do not edit it through WebUI.
               Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+              Title: Integration cleanup
+              Description: This job is integration-cleanup for Cinder-nfs-plugin-build repo. 
               Maintainer: Vladislav Kuspits
     disabled: false
     builders:
@@ -26,8 +24,6 @@
               Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
               Maintainer: Vladislav Kuspits
     defaults: global
-    parametrs:
-      - node: slave
     disabled: false
     concurrent: false
     scm:

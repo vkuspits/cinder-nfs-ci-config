@@ -8,7 +8,7 @@
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
       Title: Cinder-nfs-plugin-build job 
-      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Description: This job check repository with cinder-nfs-plugin, and build this plugin. 
       Maintainer: Vladislav Kuspits
     disabled: false
 #Require slack notification
@@ -23,12 +23,13 @@
           notify-failure: true
       - trigger:
            project: 'deploy-plugin_snapshot'
-
+#Git-plugin
     scm:
       - git:
           url: 'https://github.com/vkuspits/cinder-nfs-plugin'
           branches:
             - 'origin/master'
+#Gerrit trigger
     triggers:
       - gerrit:
           trigger-on:
@@ -54,8 +55,8 @@
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-      Title: Environment configuration job 
-      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Title: Deploy plugin in fuel env
+      Description: This job revert snapshot with fuel env and deploy cinder-nfs-plugin on it. 
       Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
@@ -79,13 +80,13 @@
           rm -rf cinder-nfs-ci-config
           git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
           puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
-          cd $fuel_devops_dir
+          cd $FUEL-DEVOPS_DIR
           dos.py start $ENV_NAME
           dos.py revert $ENV_NAME $SNAPSHOT_NAME
           cd $WORKSPACE
           cd ..
-          scp cinder-nfs-plugin-build/nfs-* $master_connection:/tmp
+          scp cinder-nfs-plugin-build/nfs-* $FACTER_master_connection:/tmp
           scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py \
-          $master_connection:/root
-          ssh $master_connection
+          $FACTER_master_connection:/root
+          ssh $FACTER_master_connection
           openstack-env.sh

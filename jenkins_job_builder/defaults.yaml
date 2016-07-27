@@ -4,8 +4,8 @@
     description: |
               This job is managed by Jenkins Job Builder, do not edit it through WebUI.
               Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+              Title: Global
+              Description: global for other job 
               Maintainer: Vladislav Kuspits
     concurrent: true
 
