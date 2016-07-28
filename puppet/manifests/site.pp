@@ -2,3 +2,5 @@
 import "required-packages"
 
 import "fuel-devops"
+
+import "ssh-to-master"

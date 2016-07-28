@@ -5,44 +5,49 @@
     parametrs:
       - node: slave
     description: |
-              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
-              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
-              Maintainer: Vladislav Kuspits
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Integration cleanup
+      Description: This job cleanup cinder-nfs-ci-config in WORKSPACE of Jenkins-master node
+      Maintainer: Vladislav Kuspits
     disabled: false
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: true
+            - not-built: true
+            - aborted: true
     builders:
-    - shell: |
-            rm -rf cinder-nfs-ci-config
-            git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
+      - shell: |
+          rm -rf $WORKSPACE/cinder-nfs-ci-config
+          git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
 - job:
     name: jobs-updater
     node: master
     project-type: freestyle
     description: |
-              This job is managed by Jenkins Job Builder, do not edit it through WebUI.
-              Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-              Title: Jenkins Jobs Update job 
-              Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
-              Maintainer: Vladislav Kuspits
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Jenkins Jobs Update job 
+      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Maintainer: Vladislav Kuspits
     defaults: global
     parametrs:
       - node: slave
     disabled: false
     concurrent: false
     scm:
-     - git:
-        url: https://github.com/vkuspits/cinder-nfs-ci-config.git
-        branches:
-          - "origin/master"
+      - git:
+          url: https://github.com/vkuspits/cinder-nfs-ci-config.git
+          branches:
+            - "origin/master"
     triggers:
       - pollscm: "* * * * * "
+#You may write u'rs conf.ini for Jenkins
     builders:
       - shell: |
-            rm -rf cinder-nfs-ci-config
-            git clone https://github.com/vkuspits/cinder-nfs-ci-config
-            echo "[job_builder]\
-            ignore_cache=True\
-            [jenkins]\
-            url=http://127.0.0.1:8080" > conf.ini
-            jenkins-jobs --conf conf.ini update $WORKSPACE/cinder-nfs-ci-config/jenkins_job_builder/
+          echo "[job_builder]\
+          ignore_cache=True\
+          [jenkins]\
+          url=http://127.0.0.1:8080" > conf.ini
+          jenkins-jobs --conf conf.ini update jenkins_job_builder/

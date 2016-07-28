@@ -1,3 +1,4 @@
+#!/bin/bash
 #Create openstack enviroment for cinder-nfs-plugin
 fuel plugins --install /tmp/nfs-service*
 fuel env create --name cinder_nfs_ci --rel 2 --net-segment-type vlan

@@ -8,11 +8,16 @@
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
       Title: Cinder-nfs-plugin-build job 
-      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Description: This job check cinder-nfs-plugin repository, and build NFS plugin. 
       Maintainer: Vladislav Kuspits
     disabled: false
 #Require slack notification
     publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: false
+            - not-built: true
+            - aborted: true
       - slack:
           room: '@vkuspits'
           team-domain: 'miracloud'
@@ -21,6 +26,11 @@
           notify-aborted: true
           notify-not-built: true
           notify-failure: true
+      - archive:
+          artifacts: '*.rpm'
+          allow-empty: 'true'
+          fingerprint: false
+          default-excludes: false
       - trigger:
            project: 'env-config'
 
@@ -55,13 +65,14 @@
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
       Title: Environment configuration job 
-      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Description: This job clones cinder-nfs-ci-config repository to Jenkins slave and run puppet manifest to create venv, and install fuel-devops.
+      Create environment for Fuel via fuel-devops
       Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
       - workspace-cleanup:
           clean-if:
-            - success: true
+            - success: false
             - not-built: true
             - aborted: true
       - trigger:
@@ -88,8 +99,8 @@
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
-      Title: Install and deploy plugin job 
-      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Title: Install and deploy deploy-plugin job 
+      Description: This job copy plugin to Fuel-master node, create environment in Fuel, enabled NFS plugin and start deploy. 
       Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
@@ -109,14 +120,17 @@
           notify-not-built: true
           notify-failure: true
     builders:
+      - copyartifact:
+          project: cinder-nfs-plugin-build
+          filter: "*.rpm"
+          target: "plugin/"
       - shell: |
-          rm -rf cinder-nfs-ci-config
-          git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
-          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
-          scp $WORKSPACE/cinder-nfs-plugin-build/cinder-nfs-plugin/nfs-* root@10.10.0.2:/tmp
-          scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py root@10.10.0.2:/root
+          scp $WORKSPACE/plugin/nfs-* root@10.10.0.2:/tmp
+          cd ..
+          scp env-config/cinder-nfs-ci-config/python/settings.py root@10.10.0.2:/root
+          scp env-config/cinder-nfs-ci-config/shell_scripts/openstack-env.sh root@10.10.0.2:/root
           ssh root@10.10.0.2
-          openstack-env.sh
+          . openstack-env.sh
 - job:
     name: deploy-success
     project-type: freestyle
@@ -126,7 +140,7 @@
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
       Title: job 
-      Description: This job updates all other jobs from Cinder-nfs-plugin-build repo. 
+      Description: This job notificated about succesfull deploy. 
       Maintainer: Vladislav Kuspits
     disabled: false
     publishers:

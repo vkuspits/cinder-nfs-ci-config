@@ -4,12 +4,12 @@
 class fuel-devops {
 	# resources
 	$iso_path = '*/MirantisOpenStack-9.0-RC2.iso'
-    $create_command = '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env/bin/dos.py 
+    $create_command = '$WORKSPACE/fuel-devops-env/bin/dos.py 
     create --vcpu 2 --node-count 4 --ram 3 --iso-path $iso_path --admin-ram 4 
     --admin-disk-size 80 cinder_nfs_ci'
-    $cleanup_command = '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env/bin/dos.py 
+    $cleanup_command = '$WORKSPACE/fuel-devops-env/bin/dos.py 
     erase cinder_nfs_ci'
-    $template_path = '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env/devops/
+    $template_path = '$WORKSPACE/fuel-devops-env/devops/
     temlates/default.yaml'
 
     module { 'puppetlabs/stdlib':
@@ -27,13 +27,13 @@ class fuel-devops {
     exec { 'env-cleanup':
     	command => '/usr/bin/python $cleanup_command',
 		path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-		cwd     => '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env/bin/',
+		cwd     => '$WORKSPACE/fuel-devops-env/bin/',
     }
 
 	exec { 'env-create':
 		command => '/usr/bin/python $create_command',
 		path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-		cwd     => '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env/bin/',
+		cwd     => '$WORKSPACE/fuel-devops-env/bin/',
 		require => Exec['env-cleanup'],
 	}
 }

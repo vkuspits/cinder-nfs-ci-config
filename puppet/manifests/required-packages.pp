@@ -33,14 +33,14 @@ class required-packages {
 	python::virtualenv { 'fuel-devops-env':
 	    ensure     => present,
 	    systempkgs => true,
-	    venv_dir   => '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env',
-	    cwd        => '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env',
+	    venv_dir   => '$WORKSPACE/fuel-devops-env',
+	    cwd        => '$WORKSPACE/fuel-devops-env',
 	    timeout    => 60,
 	}
 
 	python::pip { 'fuel-devops':
 	    pkgname    => 'git+https://github.com/openstack/fuel-devops.git',
-	    virtualenv => '$WORKSPACE/cinder-nfs-ci-config/fuel-devops-env',
+	    virtualenv => '$WORKSPACE/fuel-devops-env',
 	    timeout    => 60,    
     }
 }
