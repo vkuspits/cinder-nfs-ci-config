@@ -2,18 +2,20 @@
 CI for cinder-nfs-plugin
 # Requirements
 This CI need fuel-devops environment with 3 slave nodes and snapshot of fuel environment with 2 nodes controller, compute-cinder.
+Installed open-jdk* in Fuel-master node.
+In Jenkins config u need Fuel-master node configured as a jenkins-slave.
 # Installation
 
 	git clone -o origin -b using_snapshot https://github.com/vkuspits/cinder-nfs-ci-config.git
 
 # Usage
-Run 
-on Jenkins Slave
+Configure
 
-	export $FUEL-DEVOPS_DIR=<fuel-devops_dir>
-	export $SNAPSHOT_NAME=<name_of_env_snapshot>
-	export $ENV=<name_of_fuel-devops_env>
-	export $FACTER_master_connection=<root@ip_of_masternode>
+    $FUEL-DEVOPS_DIR=<fuel-devops_dir>
+	$SNAPSHOT_NAME=<name_of_env_snapshot>
+	$ENV=<name_of_fuel-devops_env>
+
+in cinder-nfs-ci-config/jenkins_job_builder/start-mos.yaml
 
 on Jenkins Master
 

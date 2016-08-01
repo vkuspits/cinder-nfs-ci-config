@@ -1,11 +1,12 @@
+#!/bin/bash
 #Create openstack enviroment for cinder-nfs-plugin
-fuel plugins --install /tmp/nfs-service*
+fuel plugins --install $WORKSPACE/plugin/nfs-service*
 fuel env create --name cinder_nfs_ci --rel 2 --net-segment-type vlan
 env=$(fuel env | grep cinder_nfs_ci)
 env_id=${env:0:1}
 #This part make plugin enabled in fuel env
 fuel --env $env_id settings --download
-python /root/settings.py
+python $WORKSPACE/scripts/settings.py
 fuel --env $env_id settings --upload
 #
 #Set node roles

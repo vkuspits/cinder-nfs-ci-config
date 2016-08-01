@@ -13,6 +13,11 @@
     disabled: false
 #Require slack notification
     publishers:
+      - workspace-cleanup:
+        clean-if:
+          - success: false
+          - not-built: true
+          - aborted: true
       - slack:
           room: '@vkuspits'
           team-domain: 'miracloud'
@@ -21,8 +26,13 @@
           notify-aborted: true
           notify-not-built: true
           notify-failure: true
+      - archive:
+          artifacts: '*.rpm'
+          allow-empty: 'true'
+          fingerprint: false
+          default-excludes: false
       - trigger:
-           project: 'deploy-plugin_snapshot'
+           project: 'revert_snapshot'
 #Git-plugin
     scm:
       - git:
@@ -48,15 +58,68 @@
 
 #Create MOS env via fuel-devops
 - job:
-    name: deploy-plugin_snapshot
+    name: revert_snapshot
     project-type: freestyle
     defaults: global
     node: slave
     description: |
       This job is managed by Jenkins Job Builder, do not edit it through WebUI.
       Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
+      Title: Revert snapshot
+      Description: This job revert snapshot with fuel env. 
+      Maintainer: Vladislav Kuspits
+    disabled: false
+    parametrs:
+      - string:
+          name: FUEL-DEVOPS_DIR
+          default: /home/vlad/working_dir/fuel-devops-venv/
+          description: "Urs fuel-devops-venv dir"
+      - string:
+          name: ENV_NAME
+          default: cinder-nfs-ci
+          description: "Name fuel-devops env"
+      - string:
+          name: SNAPSHOT_NAME
+          default: ready-env_snapshot
+          description: "Name of snap"
+    publishers:
+      - workspace-cleanup:
+          clean-if:
+            - success: false
+            - not-built: true
+            - aborted: true
+      - trigger:
+           project: 'deploy-plugin'
+      - slack:
+          room: '@vkuspits'
+          team-domain: 'miracloud'
+          auth-token: 'rI9LMiXqaIenTY5UGrTpzVhE'
+          notify-success: true
+          notify-aborted: true
+          notify-not-built: true
+          notify-failure: true
+      - archive:
+          artifacts: '*.sh, *.py'
+          allow-empty: 'true'
+          fingerprint: false
+          default-excludes: false
+    builders:
+      - shell: |
+          rm -rf cinder-nfs-ci-config
+          git clone -o origin -b using_snapshot https://github.com/vkuspits/cinder-nfs-ci-config.git
+          cd $FUEL-DEVOPS_DIR
+          dos.py start $ENV_NAME
+          dos.py revert $ENV_NAME $SNAPSHOT_NAME
+- job:
+    name: deploy-plugin
+    project-type: freestyle
+    defaults: global
+    node: Fuel
+    description: |
+      This job is managed by Jenkins Job Builder, do not edit it through WebUI.
+      Please use this repository to make changes: <a href= "https://github.com/vkuspits/cinder-nfs-ci-config\">https://github.com/vkuspits/cinder-nfs-ci-config</a>
       Title: Deploy plugin in fuel env
-      Description: This job revert snapshot with fuel env and deploy cinder-nfs-plugin on it. 
+      Description: This job deploy cinder-nfs-plugin on fuel env. 
       Maintainer: Vladislav Kuspits
     disabled: false
     publishers:
@@ -65,8 +128,6 @@
             - success: false
             - not-built: true
             - aborted: true
-      - trigger:
-           project: 'cinder-nfs-plugin-build'
       - slack:
           room: '@vkuspits'
           team-domain: 'miracloud'
@@ -76,17 +137,13 @@
           notify-not-built: true
           notify-failure: true
     builders:
+      - copyartifact:
+          project: cinder-nfs-plugin-build
+          filter: "*.rpm"
+          target: "plugin/"
+      - copyartifact:
+          project: revert_snapshot
+          filter: "*.sh, *.py"
+          target: "scripts/"
       - shell: |
-          rm -rf cinder-nfs-ci-config
-          git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
-          puppet apply $WORKSPACE/cinder-nfs-ci-config/puppet/manifest/ssh-to-master.pp
-          cd $FUEL-DEVOPS_DIR
-          dos.py start $ENV_NAME
-          dos.py revert $ENV_NAME $SNAPSHOT_NAME
-          cd $WORKSPACE
-          cd ..
-          scp cinder-nfs-plugin-build/nfs-* $FACTER_master_connection:/tmp
-          scp $WORKSPACE/cinder-nfs-ci-config/python/settings.py \
-          $FACTER_master_connection:/root
-          ssh $FACTER_master_connection
-          openstack-env.sh
+          . openstack-env.sh 

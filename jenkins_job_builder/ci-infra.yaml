@@ -12,7 +12,7 @@
     builders:
       - shell: |
             rm -rf cinder-nfs-ci-config
-            git clone https://github.com/vkuspits/cinder-nfs-ci-config.git
+            git clone -o origin -b using_snapshot https://github.com/vkuspits/cinder-nfs-ci-config.git
 - job:
     name: jobs-updater
     node: master
@@ -30,15 +30,13 @@
       - git:
           url: https://github.com/vkuspits/cinder-nfs-ci-config.git
           branches:
-            - "origin/master"
+            - "origin/using_snapshot"
     triggers:
       - pollscm: "* * * * * "
     builders:
       - shell: |
-            rm -rf cinder-nfs-ci-config
-            git clone https://github.com/vkuspits/cinder-nfs-ci-config
             echo "[job_builder]\
             ignore_cache=True\
             [jenkins]\
             url=http://127.0.0.1:8080" > conf.ini
-            jenkins-jobs --conf conf.ini update $WORKSPACE/cinder-nfs-ci-config/jenkins_job_builder/
+            jenkins-jobs --conf conf.ini update jenkins_job_builder/
